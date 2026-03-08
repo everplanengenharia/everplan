@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">Gestão Inteligente</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title id="page-title">Everplan — Gestão para Escritórios de Engenharia</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --white:#fff;
@@ -557,7 +558,128 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 </style>
 </head>
 <body>
-<!-- ===================== ONBOARDING ===================== -->
+
+<!-- ===================== TELA DE AUTH ===================== -->
+<div id="auth-wall" style="display:none;position:fixed;inset:0;z-index:9999;background:#080814;overflow-y:auto;">
+
+  <!-- LANDING -->
+  <div id="auth-landing" style="min-height:100vh;display:flex;flex-direction:column;">
+
+    <!-- NAV -->
+    <nav style="display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid rgba(255,255,255,.06);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;background:linear-gradient(135deg,#6c63ff,#a59cff);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;">⚙</div>
+        <span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff;letter-spacing:-.3px;">EVERPLAN</span>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="authShowLogin()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:9px 22px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)'">Entrar</button>
+        <button onclick="authShowRegister()" style="background:linear-gradient(135deg,#6c63ff,#8b5cf6);border:none;color:#fff;padding:9px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Cadastrar escritório</button>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;color:#a59cff;letter-spacing:.5px;margin-bottom:28px;text-transform:uppercase;">✦ Plataforma para Engenharia Complementar</div>
+      <h1 style="font-family:'Syne',sans-serif;font-size:clamp(36px,6vw,68px);font-weight:800;color:#fff;line-height:1.05;letter-spacing:-2px;margin-bottom:20px;max-width:820px;">
+        Gerencie seu escritório<br><span style="background:linear-gradient(135deg,#6c63ff,#a59cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">com inteligência</span>
+      </h1>
+      <p style="font-size:17px;color:rgba(255,255,255,.5);max-width:520px;line-height:1.7;margin-bottom:40px;">
+        Projetos, clientes, ARTs, protocolos, financeiro e IA — tudo em um só lugar para escritórios de engenharia elétrica, hidrossanitária, PPCI e estrutural.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+        <button onclick="authShowRegister()" style="background:linear-gradient(135deg,#6c63ff,#8b5cf6);border:none;color:#fff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 8px 32px rgba(108,99,255,.4);">Criar conta gratuita →</button>
+        <button onclick="authShowLogin()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.8);padding:14px 32px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;">Já tenho conta</button>
+      </div>
+
+      <!-- FEATURES -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin-top:72px;text-align:left;">
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px;">
+          <div style="font-size:24px;margin-bottom:10px;">📊</div>
+          <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;">Dashboard completo</div>
+          <div style="font-size:12.5px;color:rgba(255,255,255,.4);line-height:1.6;">KPIs, gráficos, DRE e projeção financeira em tempo real.</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px;">
+          <div style="font-size:24px;margin-bottom:10px;">🤖</div>
+          <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;">Equipe IA integrada</div>
+          <div style="font-size:12.5px;color:rgba(255,255,255,.4);line-height:1.6;">9 especialistas IA: comercial, financeiro, projetos, CELESC, hidro e mais.</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px;">
+          <div style="font-size:24px;margin-bottom:10px;">🔒</div>
+          <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;">Dados isolados</div>
+          <div style="font-size:12.5px;color:rgba(255,255,255,.4);line-height:1.6;">Cada escritório acessa só os seus dados. Segurança total.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:24px;font-size:11.5px;color:rgba(255,255,255,.2);">© 2025 Everplan · Gestão para Engenharia Complementar</div>
+  </div>
+
+  <!-- FORM DE AUTH (login/cadastro) -->
+  <div id="auth-form-wrap" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px;">
+    <div style="background:#0f0f1e;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:40px;width:100%;max-width:420px;">
+
+      <!-- Logo -->
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#6c63ff,#a59cff);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 12px;">⚙</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;">EVERPLAN</div>
+      </div>
+
+      <!-- Tabs -->
+      <div style="display:flex;background:rgba(255,255,255,.05);border-radius:10px;padding:4px;margin-bottom:28px;">
+        <button id="tab-login" onclick="authShowLogin()" style="flex:1;padding:9px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:linear-gradient(135deg,#6c63ff,#8b5cf6);color:#fff;transition:all .2s;">Entrar</button>
+        <button id="tab-register" onclick="authShowRegister()" style="flex:1;padding:9px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:transparent;color:rgba(255,255,255,.5);transition:all .2s;">Cadastrar</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="form-login">
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">E-mail</label>
+          <input id="auth-login-email" type="email" placeholder="seu@email.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#6c63ff'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Senha</label>
+          <input id="auth-login-pass" type="password" placeholder="••••••••" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#6c63ff'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+            onkeydown="if(event.key==='Enter')authLogin()">
+        </div>
+        <div id="auth-login-err" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#fca5a5;margin-bottom:14px;"></div>
+        <button onclick="authLogin()" id="btn-login" style="width:100%;background:linear-gradient(135deg,#6c63ff,#8b5cf6);border:none;color:#fff;padding:13px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Entrar na plataforma</button>
+        <div style="text-align:center;margin-top:16px;">
+          <button onclick="authForgotPassword()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer;font-family:inherit;">Esqueci minha senha</button>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="form-register" style="display:none;">
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Nome do escritório</label>
+          <input id="auth-reg-nome" type="text" placeholder="Ex: Engenharia Silva & Associados" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#6c63ff'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Seu nome</label>
+          <input id="auth-reg-usuario" type="text" placeholder="Ex: Laura Silva" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#6c63ff'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">E-mail</label>
+          <input id="auth-reg-email" type="email" placeholder="seu@email.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#6c63ff'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Senha <span style="font-weight:400;text-transform:none;letter-spacing:0;">(mín. 8 caracteres)</span></label>
+          <input id="auth-reg-pass" type="password" placeholder="••••••••" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#6c63ff'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+            onkeydown="if(event.key==='Enter')authRegister()">
+        </div>
+        <div id="auth-reg-err" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#fca5a5;margin-bottom:14px;"></div>
+        <div id="auth-reg-ok" style="display:none;background:rgba(26,122,66,.15);border:1px solid rgba(26,122,66,.3);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#6ee7b7;margin-bottom:14px;"></div>
+        <button onclick="authRegister()" id="btn-register" style="width:100%;background:linear-gradient(135deg,#6c63ff,#8b5cf6);border:none;color:#fff;padding:13px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Criar minha conta</button>
+        <p style="font-size:11px;color:rgba(255,255,255,.3);text-align:center;margin-top:14px;">Ao cadastrar, você concorda com nossos termos de uso. Gratuito para começar.</p>
+      </div>
+
+      <div style="text-align:center;margin-top:20px;">
+        <button onclick="document.getElementById('auth-form-wrap').style.display='none';document.getElementById('auth-landing').style.display='flex';" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer;font-family:inherit;">← Voltar ao início</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ===================== FIM AUTH ===================== -->
 <div id="onb-overlay" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(10,10,20,.82);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
 
   <!-- STEP 0: Boas-vindas -->
@@ -728,6 +850,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
     </div>
     <div style="display:flex;align-items:center;gap:14px;">
       <div class="dt-chip" id="dt"></div>
+      <!-- USER BADGE -->
+      <div id="tb-user-badge" style="display:none;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:5px 12px 5px 8px;">
+        <div id="tb-user-avatar" style="width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#6c63ff,#a59cff);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;">E</div>
+        <span id="tb-user-name" style="font-size:12.5px;font-weight:600;color:var(--text);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
+        <button onclick="authLogout()" title="Sair" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--dim);padding:0 0 0 4px;line-height:1;" onmouseover="this.style.color='#e53e3e'" onmouseout="this.style.color='var(--dim)'">⏻</button>
+      </div>
       <!-- SINO DE NOTIFICAÇÕES -->
       <div style="position:relative;" id="notif-wrapper">
         <button onclick="toggleNotifPanel()" style="width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;position:relative;transition:all .15s;" id="notif-btn" title="Notificações">
@@ -9865,9 +9993,273 @@ try{
   },50);
 }
 
-// === INICIALIZAÇÃO ===
-try{aplicarPerfil();}catch(e){}
-window.addEventListener('resize', ()=>{ try{_desenharGrafico();}catch(e){} });
+// === SUPABASE AUTH & DATA ===
+(function(){
+  // ─── CONFIG — substitua com suas credenciais do Supabase ───
+  const SUPA_URL = 'https://pwtxydvdhbvtkbmoeqaj.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHh5ZHZkaGJ2dGtibW9lcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMDgyODEsImV4cCI6MjA4ODU4NDI4MX0.44ceNf-QZt_MvArdfqlQ7-4fNquN5cFRiVCN-MezRks';
+  // ──────────────────────────────────────────────────────────
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPA_URL, SUPA_KEY);
+  window._sb = sb;
+
+  // ─── Mostrar/ocultar telas ───
+  window.authShowLanding = function(){
+    document.getElementById('auth-wall').style.display='block';
+    document.getElementById('auth-landing').style.display='flex';
+    document.getElementById('auth-form-wrap').style.display='none';
+  };
+  window.authShowLogin = function(){
+    document.getElementById('auth-wall').style.display='block';
+    document.getElementById('auth-landing').style.display='none';
+    const fw=document.getElementById('auth-form-wrap');fw.style.display='flex';
+    document.getElementById('form-login').style.display='block';
+    document.getElementById('form-register').style.display='none';
+    document.getElementById('tab-login').style.background='linear-gradient(135deg,#6c63ff,#8b5cf6)';
+    document.getElementById('tab-login').style.color='#fff';
+    document.getElementById('tab-register').style.background='transparent';
+    document.getElementById('tab-register').style.color='rgba(255,255,255,.5)';
+    setTimeout(()=>document.getElementById('auth-login-email')?.focus(),100);
+  };
+  window.authShowRegister = function(){
+    document.getElementById('auth-wall').style.display='block';
+    document.getElementById('auth-landing').style.display='none';
+    const fw=document.getElementById('auth-form-wrap');fw.style.display='flex';
+    document.getElementById('form-login').style.display='none';
+    document.getElementById('form-register').style.display='block';
+    document.getElementById('tab-register').style.background='linear-gradient(135deg,#6c63ff,#8b5cf6)';
+    document.getElementById('tab-register').style.color='#fff';
+    document.getElementById('tab-login').style.background='transparent';
+    document.getElementById('tab-login').style.color='rgba(255,255,255,.5)';
+    setTimeout(()=>document.getElementById('auth-reg-nome')?.focus(),100);
+  };
+
+  function hideAuthWall(){
+    document.getElementById('auth-wall').style.display='none';
+  }
+
+  // ─── Atualiza topbar com dados do usuário ───
+  function atualizarTopbarUser(user, meta){
+    const badge=document.getElementById('tb-user-badge');
+    if(!badge)return;
+    badge.style.display='flex';
+    const nome=meta?.nome_escritorio||meta?.usuario||user.email?.split('@')[0]||'Escritório';
+    const inicial=nome.charAt(0).toUpperCase();
+    document.getElementById('tb-user-name').textContent=nome;
+    document.getElementById('tb-user-avatar').textContent=inicial;
+    // Atualiza perfil do app
+    if(S.perfil){
+      if(meta?.nome_escritorio) S.perfil.nome=meta.nome_escritorio;
+      if(meta?.usuario) S.perfil.usuario=meta.usuario;
+      try{aplicarPerfil();}catch(e){}
+    }
+  }
+
+  // ─── CADASTRO ───
+  window.authRegister = async function(){
+    const nome=document.getElementById('auth-reg-nome').value.trim();
+    const usuario=document.getElementById('auth-reg-usuario').value.trim();
+    const email=document.getElementById('auth-reg-email').value.trim();
+    const pass=document.getElementById('auth-reg-pass').value;
+    const errEl=document.getElementById('auth-reg-err');
+    const okEl=document.getElementById('auth-reg-ok');
+    const btn=document.getElementById('btn-register');
+
+    errEl.style.display='none'; okEl.style.display='none';
+    if(!nome||!usuario||!email||!pass){
+      errEl.textContent='Preencha todos os campos.';errEl.style.display='block';return;
+    }
+    if(pass.length<8){
+      errEl.textContent='A senha deve ter pelo menos 8 caracteres.';errEl.style.display='block';return;
+    }
+
+    btn.textContent='Criando conta...';btn.disabled=true;
+
+    const {data,error}=await sb.auth.signUp({
+      email, password:pass,
+      options:{data:{nome_escritorio:nome, usuario}}
+    });
+
+    btn.textContent='Criar minha conta';btn.disabled=false;
+
+    if(error){
+      const msgs={'User already registered':'Este e-mail já está cadastrado. Faça login.','Password should be at least 6 characters':'Senha muito curta.'};
+      errEl.textContent=msgs[error.message]||error.message;
+      errEl.style.display='block';return;
+    }
+
+    okEl.textContent='✓ Conta criada! Verifique seu e-mail para confirmar e depois faça login.';
+    okEl.style.display='block';
+    setTimeout(()=>authShowLogin(),3000);
+  };
+
+  // ─── LOGIN ───
+  window.authLogin = async function(){
+    const email=document.getElementById('auth-login-email').value.trim();
+    const pass=document.getElementById('auth-login-pass').value;
+    const errEl=document.getElementById('auth-login-err');
+    const btn=document.getElementById('btn-login');
+
+    errEl.style.display='none';
+    if(!email||!pass){errEl.textContent='Preencha e-mail e senha.';errEl.style.display='block';return;}
+
+    btn.textContent='Entrando...';btn.disabled=true;
+
+    const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
+
+    btn.textContent='Entrar na plataforma';btn.disabled=false;
+
+    if(error){
+      const msgs={'Invalid login credentials':'E-mail ou senha incorretos.','Email not confirmed':'Confirme seu e-mail antes de entrar.'};
+      errEl.textContent=msgs[error.message]||'Erro ao entrar. Tente novamente.';
+      errEl.style.display='block';return;
+    }
+
+    await onLoginSuccess(data.user);
+  };
+
+  // ─── LOGOUT ───
+  window.authLogout = async function(){
+    if(!confirm('Sair da plataforma?'))return;
+    // Salva dados antes de sair
+    try{await salvarDadosSupabase();}catch(e){}
+    await sb.auth.signOut();
+    // Limpa estado
+    const badge=document.getElementById('tb-user-badge');if(badge)badge.style.display='none';
+    authShowLanding();
+  };
+
+  // ─── ESQUECI SENHA ───
+  window.authForgotPassword = async function(){
+    const email=prompt('Digite seu e-mail para redefinir a senha:');
+    if(!email)return;
+    const {error}=await sb.auth.resetPasswordForEmail(email);
+    if(error)alert('Erro: '+error.message);
+    else alert('✓ E-mail de redefinição enviado! Verifique sua caixa de entrada.');
+  };
+
+  // ─── PÓS-LOGIN: carrega dados do usuário ───
+  async function onLoginSuccess(user){
+    hideAuthWall();
+    // Busca metadados
+    const meta=user.user_metadata||{};
+    // Carrega dados do banco
+    await carregarDadosSupabase(user.id);
+    atualizarTopbarUser(user, meta);
+    // Atualiza onboarding
+    try{
+      const done=localStorage.getItem('ep_onboarding_done_'+user.id);
+      if(!done && !(S.projs?.length)){
+        setTimeout(()=>{try{iniciarOnboarding();}catch(e){}},800);
+      }
+    }catch(e){}
+  }
+
+  // ─── SALVAR NO SUPABASE ───
+  window.salvarDadosSupabase = async function(){
+    const session=await sb.auth.getSession();
+    const user=session?.data?.session?.user;
+    if(!user){salvarDadosLocal();return;}
+    try{
+      const dados={
+        projs:S.projs,recs:S.recs,desps:S.desps,confs:S.confs,docs:S.docs,
+        hist:S.hist,dimensionamentos:S.dimensionamentos,propostas:S.propostas||[],
+        clientes:S.clientes||[],memoriais:S.memoriais||[],checklists:S.checklists||[],
+        mensagens:S.mensagens||[],arts:S.arts||[],protocolos:S.protocolos||[],
+        prazos:S.prazos||[],rt:S.rt||{},gps:S.gps||{},orcamentos:S.orcamentos||[],
+        perfil:S.perfil||{}
+      };
+      await sb.from('dados_escritorio').upsert({
+        user_id:user.id, dados:dados, atualizado_em:new Date().toISOString()
+      },{onConflict:'user_id'});
+      // Backup local também
+      salvarDadosLocal();
+    }catch(e){console.warn('Erro Supabase, salvando local:',e);salvarDadosLocal();}
+  };
+
+  // ─── CARREGAR DO SUPABASE ───
+  async function carregarDadosSupabase(userId){
+    try{
+      const {data,error}=await sb.from('dados_escritorio')
+        .select('dados').eq('user_id',userId).single();
+      if(error||!data)return;
+      const d=data.dados;
+      if(!d)return;
+      // Preenche o estado S
+      S.projs=d.projs||[];S.recs=d.recs||[];S.desps=d.desps||[];
+      S.confs=d.confs||[];S.docs=d.docs||[];S.hist=d.hist||{};
+      S.dimensionamentos=d.dimensionamentos||{};S.propostas=d.propostas||[];
+      S.clientes=d.clientes||[];S.memoriais=d.memoriais||[];
+      S.checklists=d.checklists||[];S.mensagens=d.mensagens||[];
+      S.arts=d.arts||[];S.protocolos=d.protocolos||[];S.prazos=d.prazos||[];
+      S.rt=d.rt||{};S.gps=d.gps||{};S.orcamentos=d.orcamentos||[];
+      if(d.perfil)S.perfil={...S.perfil,...d.perfil};
+      // Re-renderiza tudo
+      try{aplicarPerfil();}catch(e){}
+      try{rP();}catch(e){}
+      try{renderClientes();}catch(e){}
+      try{renderARTs();}catch(e){}
+      try{renderProtocolos();}catch(e){}
+      try{renderProjChecklists();}catch(e){}
+      try{atualizarDashboard();}catch(e){}
+      console.log('✓ Dados carregados do Supabase');
+    }catch(e){console.warn('Erro ao carregar do Supabase:',e);}
+  }
+
+  // ─── SOBRESCREVE salvarDados para usar Supabase ───
+  const _salvarOriginal = window.salvarDados;
+  window.salvarDados = function(){
+    salvarDadosLocal();// salva local imediatamente (rápido)
+    salvarDadosSupabase();// salva no banco em background
+  };
+  window.salvarDadosLocal = function(){
+    try{
+      const dados={projs:S.projs,recs:S.recs,desps:S.desps,confs:S.confs,docs:S.docs,
+        hist:S.hist,dimensionamentos:S.dimensionamentos,propostas:S.propostas||[],
+        clientes:S.clientes||[],memoriais:S.memoriais||[],checklists:S.checklists||[],
+        mensagens:S.mensagens||[],arts:S.arts||[],protocolos:S.protocolos||[],
+        prazos:S.prazos||[],rt:S.rt||{},gps:S.gps||{},orcamentos:S.orcamentos||[],
+        perfil:S.perfil||{}};
+      localStorage.setItem('ep_data_v1',JSON.stringify(dados));
+    }catch(e){}
+  };
+
+  // ─── INIT: verifica sessão existente ───
+  async function initAuth(){
+    const {data}=await sb.auth.getSession();
+    if(data?.session?.user){
+      await onLoginSuccess(data.session.user);
+    } else {
+      authShowLanding();
+    }
+    // Ouve mudanças de auth
+    sb.auth.onAuthStateChange(async(event,session)=>{
+      if(event==='SIGNED_IN'&&session?.user){
+        await onLoginSuccess(session.user);
+      } else if(event==='SIGNED_OUT'){
+        authShowLanding();
+      }
+    });
+  }
+
+  // Verifica se as credenciais foram configuradas
+  if(SUPA_URL.includes('SEU_PROJECT_ID')){
+    // Modo demo: mostra aviso e vai direto pro app
+    console.warn('⚠ Supabase não configurado. Rodando em modo local.');
+    // Cria banner de aviso
+    const banner=document.createElement('div');
+    banner.id='supa-config-banner';
+    banner.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1a1550;border:1px solid #6c63ff;border-radius:10px;padding:10px 20px;font-size:12.5px;color:#a59cff;z-index:8000;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(108,99,255,.3);';
+    banner.innerHTML='⚙ <strong>Modo local</strong> — Configure o Supabase para habilitar multi-usuário. <a href="https://supabase.com" target="_blank" style="color:#6c63ff;font-weight:600;">Ver instruções →</a> <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#6c63ff;cursor:pointer;font-size:16px;padding:0 0 0 8px;">×</button>';
+    document.body.appendChild(banner);
+    // Vai direto pro app sem auth
+    hideAuthWall();
+  } else {
+    initAuth();
+  }
+})();
+
 </script>
 </body>
 </html>
